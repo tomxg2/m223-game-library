@@ -1,32 +1,31 @@
-# Übungsprojekt: Punch Clock
+# Game Library
 
-Punch Clock ist ein Zeiterfassungssystem, welches mit Quarkus entwickelt wird.
+Projektarbeit Modul 223 (Quarkus). Benutzer verwalten ihre persönliche Spielesammlung: Games, Genres, Plattformen und Bibliothekseinträge mit Spielzeit, Status und Bewertung.
 
-## Erste Schritte
+## Starten
 
-1. Erstelle eine Kopie (fork) von diesem Projekt.
-1. Stelle sicher, dass Docker installiert ist und läuft.
-1. Stelle sicher, dass Visual Studio Code und die Erweiterung Remote Container installiert ist.
-1. Klone (clone) das Projekt lokal, um damit arbeiten zu können.
-1. Öffne das Projekt mit Visual Studio Code.
-1. Öffne das Projekt im Entwicklungscontainer.
-1. Starte das Projekt mit dem Kommando `Quarkus: Debug current Quarkus Project`
-1. Probiere die Client-Applikation unter http://localhost:8080 aus.
-1. Schaue die API auf http://localhost:8080/q/swagger-ui/ an.
+1. Projekt im Dev Container öffnen (`Dev Containers: Reopen in Container`).
+2. `./mvnw quarkus:dev`
+3. Swagger UI: http://localhost:8080/q/swagger-ui/
 
-## Datenbank
+Im Dev-Profil werden automatisch Testdaten geladen (`ExampleDataService`).
 
-Die Daten werden in einer PostgreSQL-Datenbank gespeichert. In der Entwicklungsumgebung wird diese in der [docker-compose-yml](./.devcontainer/docker-compose.yml) konfiguriert.
+## Entitäten
 
-### Datenbankadministration
+| Entität | Beziehungen |
+|---|---|
+| ApplicationUser | 1:n LibraryEntry |
+| LibraryEntry | n:1 ApplicationUser, n:1 Game, n:1 Platform |
+| Game | n:1 Genre, n:m Platform (Join-Tabelle `game_platform`) |
+| Genre | 1:n Game |
+| Platform | n:m Game, 1:n LibraryEntry |
 
-Über http://localhost:5050 ist PgAdmin4 erreichbar. Damit lässt sich die Datenbank komfortabel verwalten. Der Benutzername lautet `zli@example.com` und das Passwort `zli*123`. Die Verbindung zur PostgreSQL-Datenbank muss zuerst mit folgenden Daten konfiguriert werden:
- - Host name/address: `db`
- - Port: `5432`
- - Maintenance database: `postgres`
- - Username: `postgres`
- - Password: `postgres`
+## Endpunkte
 
-## Automatische Tests
-
-Die automatischen Tests können mit `./mvnw quarkus:test` ausgeführt werden. Für die automatischen Tests wird nicht die PostgreSQL-Datenbank verwendet, sondern eine H2-Datenbank, welche sich im Arbeitsspeicher während der Ausführung befindet.
+| Ressource | Endpunkte |
+|---|---|
+| Genres | `GET/POST /genres`, `GET/PUT/DELETE /genres/{id}` |
+| Platforms | `GET/POST /platforms`, `GET/PUT/DELETE /platforms/{id}` |
+| Games | `GET/POST /games`, `GET/PUT/DELETE /games/{id}` |
+| Users | `GET/POST /users`, `GET/PUT/DELETE /users/{id}` |
+| Library Entries | `GET /library-entries?userId=`, `POST /library-entries`, `GET/PUT/DELETE /library-entries/{id}` |
